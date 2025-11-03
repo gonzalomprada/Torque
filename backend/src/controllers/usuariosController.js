@@ -90,22 +90,19 @@ class UsuariosController {
     }
 
     // DELETE /api/v1/usuarios/:id
+    // controllers/usuariosController.js
     async eliminar(req, res) {
-    try {
+        try {
         const { id } = req.params;
         const usuario = await Usuario.findByPk(id);
-
-        if (!usuario) {
-        return res.status(404).json({ message: 'Usuario no encontrado' });
-        }
-
-        await usuario.update({ activo: false });
-
-        res.status(200).json({ message: 'Usuario dado de baja correctamente' });
-    } catch (error) {
+        if (!usuario) return res.status(404).json({ message: 'Usuario no encontrado' });
+    
+        await usuario.destroy();
+        res.status(200).json({ message: 'Usuario eliminado correctamente' });
+        } catch (error) {
         console.error('Error al eliminar usuario:', error);
         res.status(500).json({ message: 'Error interno al eliminar usuario' });
-    }
+        }
     }
 }
 
