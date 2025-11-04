@@ -26,7 +26,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
 
 -- Usuario por defecto (password: admin123)
 INSERT INTO usuarios (nombre, email, hash_password)
-VALUES ('Admin', 'admin@torque.local', '$2a$10$Qz3t6xdjSnPXt1Ekx2m1eumrcXhz04ZIkf7fKZVbQpDkduIJkPfxm')
+VALUES ('Admin', 'admin@torque.local', '$2b$10$CRPRSe05iwSE.AuQNxAwS.inY.bboLtipqXYYdUi.ghCVzjZnL456')
 ON CONFLICT (email) DO NOTHING;
 
 -- Tabla intermedia usuarios_roles
