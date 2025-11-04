@@ -3,6 +3,7 @@ const usuariosRoutes = require('./src/routes/usuariosRoutes.js');
 const vehiculosRoutes = require('./src/routes/vehiculosRoutes.js');
 const estadosTipoRoutes = require('./src/routes/estadosTipoRoutes.js');
 const incidenciasRoutes = require('./src/routes/incidenciasRoutes.js');
+const authRoutes = require('./src/routes/authRoutes');
 
 const app = express();
 const cors = require('cors');
@@ -20,5 +21,6 @@ app.use(`${API_PREFIX}/usuarios`, usuariosRoutes);
 app.use(`${API_PREFIX}/vehiculos`, vehiculosRoutes);
 app.use(`${API_PREFIX}/estados`, estadosTipoRoutes);
 app.use(`${API_PREFIX}/incidencias`, incidenciasRoutes);
+app.use(`${API_PREFIX}/auth`, authRoutes);
 
 module.exports = app;

@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const vehiculosController = require('../controllers/vehiculosController.js');
+const { auth, requireRole } = require('../middleware/auth.js');
 
 // /api/v1/vehiculos
 router.route('/')
@@ -11,6 +12,6 @@ router.route('/')
 router.route('/:id')
   .get(vehiculosController.obtener)
   .put(vehiculosController.actualizar)
-  .delete(vehiculosController.eliminar);
+  .delete(auth, requireRole('ADMIN'), vehiculosController.eliminar);
 
 module.exports = router;
