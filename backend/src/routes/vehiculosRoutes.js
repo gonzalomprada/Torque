@@ -12,6 +12,6 @@ router.route('/')
 router.route('/:id')
   .get(vehiculosController.obtener)
   .put(vehiculosController.actualizar)
-  .delete(auth, requireRole('ADMIN'), vehiculosController.eliminar);
+  .delete(vehiculosController.eliminar);
 
 module.exports = router;
