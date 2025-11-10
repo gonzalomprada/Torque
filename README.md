@@ -13,6 +13,8 @@ El sistema incluye:
 - Autenticación JWT con roles. 
 - Inyección de dependencias en Vehiculos. 
 
+El objetivo de este sistema es proveer un backend que permita registrar, consultar, y administrar el estado de los vehiculos en una flota, junto al historial e incidencias asociadas. 
+
 ## Justificación de Arquitectura 
 
 - Express: Framework simple y bien documentado. 
@@ -49,8 +51,6 @@ Torque-backend/
 |--------|------------------------|--------------------------|
 | POST   | /api/v1/auth/login     | Inicia sesión y devuelve JWT |
 
----
-
 ## Usuarios
 | Método | Endpoint                | Descripción                  |
 |--------|--------------------------|------------------------------|
@@ -59,8 +59,6 @@ Torque-backend/
 | GET    | /api/v1/usuarios/:id     | Obtener usuario por ID       |
 | PUT    | /api/v1/usuarios/:id     | Actualizar usuario           |
 | DELETE | /api/v1/usuarios/:id     | Eliminar usuario             |
-
----
 
 ## Vehículos  
 | Método | Endpoint                  | Descripción                         |
@@ -71,8 +69,6 @@ Torque-backend/
 | PUT    | /api/v1/vehiculos/:id     | Actualizar vehículo (registra evento de estado si cambia estado_actual_id) |
 | DELETE | /api/v1/vehiculos/:id     | Eliminar vehículo                   |
 
----
-
 ## Estados de Vehículo (EstadoTipo)
 | Método | Endpoint                | Descripción                      |
 |--------|--------------------------|----------------------------------|
@@ -81,8 +77,6 @@ Torque-backend/
 | GET    | /api/v1/estados/:id     | Obtener estado por ID            |
 | PUT    | /api/v1/estados/:id     | Actualizar estado                |
 | DELETE | /api/v1/estados/:id     | Eliminar estado                  |
-
----
 
 ## Incidencias
 | Método | Endpoint                  | Descripción                  |

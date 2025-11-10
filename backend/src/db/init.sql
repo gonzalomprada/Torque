@@ -69,8 +69,12 @@ CREATE TABLE IF NOT EXISTS vehiculos (
 );
 
 INSERT INTO vehiculos (dominio, marca, modelo, anio, estado_actual_id)
-SELECT 'AA123BB','Ford','Transit',2018, (SELECT id FROM estados_tipo WHERE codigo='ACTIVO')
-WHERE NOT EXISTS (SELECT 1 FROM vehiculos WHERE dominio='AA123BB');
+SELECT 'AB123CD','Toyota','Hilux',2020,(SELECT id FROM estados_tipo WHERE codigo='ACTIVO')
+WHERE NOT EXISTS (SELECT 1 FROM vehiculos WHERE dominio='AB123CD');
+
+INSERT INTO vehiculos (dominio, marca, modelo, anio, estado_actual_id)
+SELECT 'AC987EF','Renault','Kangoo',2019,(SELECT id FROM estados_tipo WHERE codigo='EN_TALLER')
+WHERE NOT EXISTS (SELECT 1 FROM vehiculos WHERE dominio='AC987EF');
 
 -- Incidencias
 CREATE TABLE IF NOT EXISTS incidencias (
@@ -85,6 +89,12 @@ CREATE TABLE IF NOT EXISTS incidencias (
   closed_at TIMESTAMP
 );
 
+INSERT INTO incidencias (vehiculo_id, titulo, descripcion, estado, creada_por)
+SELECT v.id, 'Ruidito en frenos', 'Se detecta ruido al frenar en baja velocidad', 'ABIERTA', u.id
+FROM vehiculos v, usuarios u
+WHERE v.dominio='AA123BB' AND u.email='admin@torque.local'
+ON CONFLICT DO NOTHING;
+
 -- Historial de estados (no se llena en este seed)
 CREATE TABLE IF NOT EXISTS eventos_estado (
   id SERIAL PRIMARY KEY,
@@ -95,3 +105,13 @@ CREATE TABLE IF NOT EXISTS eventos_estado (
   usuario_id INT REFERENCES usuarios(id),
   at TIMESTAMP DEFAULT NOW()
 );
+
+INSERT INTO eventos_estado (vehiculo_id, estado_anterior_id, estado_nuevo_id, motivo, usuario_id, at)
+SELECT v.id,
+       (SELECT id FROM estados_tipo WHERE codigo='ACTIVO'),
+       (SELECT id FROM estados_tipo WHERE codigo='EN_TALLER'),
+       'Ingreso a taller para mantenimiento',
+       u.id,
+       NOW()
+FROM vehiculos v, usuarios u
+WHERE v.dominio='AC987EF' AND u.email='admin@torque.local';
