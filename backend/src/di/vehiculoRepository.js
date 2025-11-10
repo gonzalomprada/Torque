@@ -1,40 +1,38 @@
-const { Vehiculo, EstadoTipo } = require('../models/index.js');
-
 class VehiculoRepository {
-  async findAll() {
-    return Vehiculo.findAll({
-      include: [{ model: EstadoTipo, as: 'estadoActual', attributes: ['codigo', 'nombre'] }],
+  constructor({ Vehiculo, EstadoTipo }) {
+    this.Vehiculo = Vehiculo;
+    this.EstadoTipo = EstadoTipo;
+  }
+
+  findAll() {
+    return this.Vehiculo.findAll({
+      include: [{ model: this.EstadoTipo, as: 'estadoActual', attributes: ['codigo', 'nombre'] }],
       order: [['id', 'ASC']]
     });
   }
 
-  async findById(id) {
-    return Vehiculo.findByPk(id, {
-      include: [{ model: EstadoTipo, as: 'estadoActual', attributes: ['codigo', 'nombre'] }]
+  findById(id) {
+    return this.Vehiculo.findByPk(id, {
+      include: [{ model: this.EstadoTipo, as: 'estadoActual', attributes: ['codigo', 'nombre'] }]
     });
   }
 
-  async findByDominio(dominio) {
-    return Vehiculo.findOne({ where: { dominio } });
+  findByDominio(dominio) {
+    return this.Vehiculo.findOne({ where: { dominio } });
   }
 
-  async create(data) {
-    return Vehiculo.create(data);
+  create(data) {
+    return this.Vehiculo.create(data);
   }
 
-  async updateById(id, data) {
-    const v = await Vehiculo.findByPk(id);
-    if (!v) return null;
-    await v.update(data);
-    return v;
+  async updateById(entity, data) {
+    return entity.update(data);
   }
 
-  async deleteById(id) {
-    const v = await Vehiculo.findByPk(id);
-    if (!v) return null;
-    await v.destroy();
-    return true;
+  async deleteById(entity) {
+    return entity.destroy();
   }
 }
 
 module.exports = VehiculoRepository;
+

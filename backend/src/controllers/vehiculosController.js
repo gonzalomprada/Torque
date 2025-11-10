@@ -1,24 +1,22 @@
-const { vehiculoService } = require('../di/container.js');
+const container = require('../di/container');
+const vehiculoService = container.resolve('vehiculoService');
 
 class VehiculosController {
   async listar(req, res) {
     try {
       const data = await vehiculoService.listar();
       res.status(200).json(data);
-    } catch (error) {
-      console.error('Error al listar vehículos:', error);
+    } catch (err) {
       res.status(500).json({ message: 'Error interno al listar vehículos' });
     }
   }
 
   async obtener(req, res) {
     try {
-      const { id } = req.params;
-      const v = await vehiculoService.obtener(id);
+      const v = await vehiculoService.obtener(req.params.id);
       if (!v) return res.status(404).json({ message: 'Vehículo no encontrado' });
       res.status(200).json(v);
-    } catch (error) {
-      console.error('Error al obtener vehículo:', error);
+    } catch (err) {
       res.status(500).json({ message: 'Error interno al obtener vehículo' });
     }
   }
@@ -27,34 +25,30 @@ class VehiculosController {
     try {
       const nuevo = await vehiculoService.crear(req.body);
       res.status(201).json(nuevo);
-    } catch (error) {
-      const status = error.status || 500;
-      res.status(status).json({ message: error.message || 'Error interno al crear vehículo' });
+    } catch (err) {
+      res.status(err.status || 500).json({ message: err.message });
     }
   }
 
   async actualizar(req, res) {
     try {
-      const { id } = req.params;
-      await vehiculoService.actualizar(id, req.body);
+      await vehiculoService.actualizar(req.params.id, req.body);
       res.status(200).json({ message: 'Vehículo actualizado correctamente' });
-    } catch (error) {
-      const status = error.status || 500;
-      res.status(status).json({ message: error.message || 'Error interno al actualizar vehículo' });
+    } catch (err) {
+      res.status(err.status || 500).json({ message: err.message });
     }
   }
 
   async eliminar(req, res) {
     try {
-      const { id } = req.params;
-      await vehiculoService.eliminar(id);
+      await vehiculoService.eliminar(req.params.id);
       res.status(200).json({ message: 'Vehículo eliminado correctamente' });
-    } catch (error) {
-      const status = error.status || 500;
-      res.status(status).json({ message: error.message || 'Error interno al eliminar vehículo' });
+    } catch (err) {
+      res.status(err.status || 500).json({ message: err.message });
     }
   }
 }
 
 module.exports = new VehiculosController();
+
 
