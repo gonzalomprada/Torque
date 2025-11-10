@@ -1,29 +1,26 @@
 const { Turno, Vehiculo } = require('../models');
 
 class TurnosController {
-    
-  // GET /api/v1/turnos/disponibles?fecha=YYYY-MM-DD
-
+  // GET /api/v1/turnos/disponibles?desde=YYYY-MM-DD&hasta=YYYY-MM-DD
   async disponibles(req, res) {
     const { fecha } = req.query;
-    const where = { estado: 'DISPONIBLE' };
-    if (fecha) where.fecha = fecha;
-    const items = await Turno.findAll({ where, order: [['fecha','ASC'],['hora','ASC']] });
+    const where = { estado: 'LIBRE' };
+    const items = await Turno.findAll({ where, order: [['start_at','ASC']] });
     res.json(items);
   }
 
-  // POST /api/v1/turnos/solicitar
+  // POST /api/v1/turnos/solicitar  { matricula, turno_id }
   async solicitar(req, res) {
     const { matricula, turno_id } = req.body || {};
     if (!matricula || !turno_id) return res.status(400).json({ msg:'matricula y turno_id son obligatorios' });
-
+  
     const turno = await Turno.findByPk(turno_id);
-    if (!turno || turno.estado !== 'DISPONIBLE') return res.status(409).json({ msg:'Turno no disponible' });
-
-    const vehiculo = await Vehiculo.findOne({ where: { dominio: matricula } });
+    if (!turno || turno.estado !== 'LIBRE') return res.status(409).json({ msg:'Turno no disponible' }); 
+  
+    const vehiculo = await Vehiculo.findOne({ where: { matricula } }); 
     if (!vehiculo) return res.status(404).json({ msg:'Vehículo no encontrado para la matrícula' });
-
-    await turno.update({ estado:'RESERVADO', vehiculo_id: vehiculo.id, dominio_ingresado: matricula });
+  
+    await turno.update({ estado:'RESERVADO', vehiculo_id: vehiculo.id });
     res.status(200).json({ msg:'Turno reservado', turno_id: turno.id });
   }
 
@@ -31,12 +28,13 @@ class TurnosController {
   async confirmar(req, res) {
     const { id } = req.params;
     const turno = await Turno.findByPk(id);
-    if (!turno || (turno.estado !== 'RESERVADO' && turno.estado !== 'DISPONIBLE')) {
-      return res.status(409).json({ msg:'Turno no reservable/confirmable' });
+    if (!turno || turno.estado !== 'RESERVADO') {
+      return res.status(409).json({ msg: 'Turno no confirmable' });
     }
-    await turno.update({ estado:'CONFIRMADO' });
-    res.json({ msg:'Turno confirmado' });
+    await turno.update({ estado: 'CONFIRMADO' });
+    res.json({ msg: 'Turno confirmado' });
   }
 }
 
 module.exports = new TurnosController();
+

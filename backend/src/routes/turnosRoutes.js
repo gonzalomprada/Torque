@@ -1,12 +1,10 @@
 const express = require('express');
 const router = express.Router();
-const turnosController = require('../controllers/turnosController');
+const turnosController = require('../controllers/turnosController.js');
+const { auth } = require('../middleware/auth.js');
 
-// Disponibilidad pública (según requerimientos)
-router.get('/disponibles', turnosController.disponibles);
-
-// Flujo de solicitud y confirmación
+router.get('/disponibles', auth, turnosController.disponibles);
 router.post('/solicitar', turnosController.solicitar);
-router.post('/:id/confirmar', turnosController.confirmar);
+router.post('/:id/confirmar', auth, turnosController.confirmar);
 
 module.exports = router;

@@ -1,20 +1,20 @@
 const { DataTypes } = require('sequelize');
-const dbSequelize = require('../db/conexion');
+const dbSequelize = require('../db/conexion.js');
 
 const Turno = dbSequelize.define('Turno', {
-  id: { type: DataTypes.BIGINT, primaryKey: true, autoIncrement: true },
-  fecha: { type: DataTypes.DATEONLY, allowNull: false },
-  hora: { type: DataTypes.STRING(5), allowNull: false }, // "09:00"
-  estado: { // DISPONIBLE | RESERVADO | CONFIRMADO | CANCELADO
-    type: DataTypes.ENUM('DISPONIBLE','RESERVADO','CONFIRMADO','CANCELADO'),
+  id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+  vehiculo_id: { type: DataTypes.INTEGER, allowNull: true },
+  start_at: { type: DataTypes.DATE, allowNull: false },
+  estado: {
+    type: DataTypes.STRING(15),
     allowNull: false,
-    defaultValue: 'DISPONIBLE'
+    defaultValue: 'LIBRE' // LIBRE | RESERVADO | CONFIRMADO | CANCELADO | ATENDIDO
   },
-  vehiculo_id: { type: DataTypes.BIGINT, allowNull: true }, // se completa al reservar/confirmar
-  dominio_ingresado: { type: DataTypes.STRING(20), allowNull: true } // matrícula digitada por el usuario
+  created_at: { type: DataTypes.DATE, allowNull: false, defaultValue: dbSequelize.literal('NOW()') }
 }, {
   tableName: 'turnos',
   timestamps: false
 });
 
 module.exports = Turno;
+
