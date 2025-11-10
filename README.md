@@ -1,81 +1,235 @@
-# Torque
-App de gestión de vehículos, incidencias y control de flota.
+# Torque - Trabajo Práctico Integrador
+
+Alumno: Gonzalo Manuel Prada
+Legajo: 0136007
+
+## Descripcion y alcance
+
+Torque es un sistema backend para la gestión del estado de vehículos dentro de una flota. Permite administrar usuarios, roles, vehículos, tipos de estado, incidencias y un registro histórico automático de cambios de estado.
+
+El sistema incluye: 
+- API RESTfull en Node.js + Express. 
+- Persistencia con PostgreSQL y manejado con Sequelize. 
+- Autenticación JWT con roles. 
+- Inyección de dependencias en Vehiculos. 
+
+## Justificación de Arquitectura 
+
+- Express: Framework simple y bien documentado. 
+- Sequelize: Permite modelos tipados, validaciones y relaciones. 
+- PostgreSQL: Motor estable y bien documentado, gran combinación con Sequelize. 
+- Awilix: Permite independizar lógica de infraestructura. 
+
+## Estructura del proyecto
+
+```
+Torque-backend/
+├─ server.js               # Punto de entrada - inicia Express
+├─ app.js                  # Middlewares generales y rutas
+└─ src/
+   ├─ db/
+   │  ├─ conexion.js       # Configuración de Sequelize
+   │  └─ init.sql          # Seed + schema de DB
+   ├─ models/              # Modelos Sequelize
+   ├─ controllers/         # Lógica de endpoints
+   ├─ routes/              # Routers por recurso
+   ├─ middleware/          # JWT + roles
+   └─ di/                  # Inyección de Dependencias (Awilix)
+       ├─ container.js
+       ├─ vehiculoRepository.js
+       ├─ vehiculoService.js
+       └─ notificador.js
+
+```
+
+## Endpoints
+
+## Autenticación
+| Método | Endpoint              | Descripción            |
+|--------|------------------------|--------------------------|
+| POST   | /api/v1/auth/login     | Inicia sesión y devuelve JWT |
+
+---
+
+## Usuarios
+| Método | Endpoint                | Descripción                  |
+|--------|--------------------------|------------------------------|
+| GET    | /api/v1/usuarios         | Listar usuarios              |
+| POST   | /api/v1/usuarios         | Crear usuario                |
+| GET    | /api/v1/usuarios/:id     | Obtener usuario por ID       |
+| PUT    | /api/v1/usuarios/:id     | Actualizar usuario           |
+| DELETE | /api/v1/usuarios/:id     | Eliminar usuario             |
+
+---
+
+## Vehículos  
+| Método | Endpoint                  | Descripción                         |
+|--------|----------------------------|-------------------------------------|
+| GET    | /api/v1/vehiculos         | Listar vehículos                    |
+| POST   | /api/v1/vehiculos         | Crear vehículo                      |
+| GET    | /api/v1/vehiculos/:id     | Obtener vehículo por ID             |
+| PUT    | /api/v1/vehiculos/:id     | Actualizar vehículo (registra evento de estado si cambia estado_actual_id) |
+| DELETE | /api/v1/vehiculos/:id     | Eliminar vehículo                   |
+
+---
+
+## Estados de Vehículo (EstadoTipo)
+| Método | Endpoint                | Descripción                      |
+|--------|--------------------------|----------------------------------|
+| GET    | /api/v1/estados         | Listar estados                   |
+| POST   | /api/v1/estados         | Crear estado                     |
+| GET    | /api/v1/estados/:id     | Obtener estado por ID            |
+| PUT    | /api/v1/estados/:id     | Actualizar estado                |
+| DELETE | /api/v1/estados/:id     | Eliminar estado                  |
+
+---
+
+## Incidencias
+| Método | Endpoint                  | Descripción                  |
+|--------|----------------------------|------------------------------|
+| GET    | /api/v1/incidencias       | Listar incidencias           |
+| POST   | /api/v1/incidencias       | Crear incidencia             |
+| GET    | /api/v1/incidencias/:id   | Obtener incidencia por ID    |
+| PUT    | /api/v1/incidencias/:id   | Actualizar incidencia        |
+| DELETE | /api/v1/incidencias/:id   | Eliminar incidencia          |
+
+## Guía de Ejecución
+
+La ejecución requiere unicamente de docker + docker compose. 
+
+En la raíz del proyecto, ejecutar el comando: 
+
+```bash 
+docker compose up -d
+```
+Esto levanta un PostreSQL con volumen persistente, inyecta un init.sql con datos a modo de prueba y expone la API de Node.js. 
+
+| Servicio | URL                                                          | Descripción    |
+| -------- | ------------------------------------------------------------ | -------------- |
+| Backend  | [http://localhost:3000](http://localhost:3000)               | API Express    |
+| API base | [http://localhost:3000/api/v1](http://localhost:3000/api/v1) | Endpoints REST |
+
+
+## UML 
 
 ```mermaid
 classDiagram
-  direction LR
+    %% ============================
+    %% ENTIDADES DEL DOMINIO
+    %% ============================
+    class Vehiculo {
+        +id : Integer
+        +dominio : String
+        +marca : String
+        +modelo : String
+        +anio : Integer
+        +estado_actual_id : Integer
+        +created_at : Date
+    }
 
-  class Usuario {
-    +id: bigint
-    +nombre: string
-    +email: string
-    +hash_password: text
-    +activo: boolean
-    +created_at: timestamptz
-  }
+    class EstadoTipo {
+        +id : Integer
+        +codigo : String
+        +nombre : String
+        +orden : Integer
+    }
 
-  class Rol {
-    +id: smallint
-    +nombre: string  <<UNIQUE>>
-  }
+    class EventoEstado {
+        +id : Integer
+        +vehiculo_id : Integer
+        +estado_anterior_id : Integer?
+        +estado_nuevo_id : Integer
+        +motivo : String
+        +usuario_id : Integer?
+        +at : Date
+    }
 
-  class UsuarioRol {
-    +usuario_id: bigint
-    +rol_id: smallint
-    <<PK(usuario_id, rol_id)>>
-  }
+    class Usuario {
+        +id : Integer
+        +nombre : String
+        +email : String
+        +hash_password : String
+        +activo : Boolean
+        +created_at : Date
+    }
 
-  class EstadoTipo {
-    +id: smallint
-    +codigo: estado_vehiculo  <<UNIQUE>>
-    +nombre: string
-    +orden: smallint
-  }
+    class Rol {
+        +id : Integer
+        +nombre : String
+    }
 
-  class Vehiculo {
-    +id: bigint
-    +dominio: string <<UNIQUE>>
-    +marca: string
-    +modelo: string
-    +anio: smallint
-    +estado_actual_id: smallint
-    +created_at: timestamptz
-  }
+    class Incidencia {
+        +id : Integer
+        +vehiculo_id : Integer
+        +titulo : String
+        +descripcion : String?
+        +estado : String
+        +creada_por : Integer
+        +cerrada_por : Integer?
+        +created_at : Date
+        +closed_at : Date?
+    }
 
-  class EventoEstado {
-    +id: bigint
-    +vehiculo_id: bigint
-    +estado_anterior_id: smallint
-    +estado_nuevo_id: smallint
-    +motivo: text
-    +usuario_id: bigint
-    +at: timestamptz
-  }
+    %% ==================================
+    %% RELACIONES BASE DE DATOS
+    %% ==================================
 
-  class Incidencia {
-    +id: bigint
-    +vehiculo_id: bigint
-    +titulo: string
-    +descripcion: text
-    +estado: estado_incidencia
-    +creada_por: bigint
-    +cerrada_por: bigint?
-    +created_at: timestamptz
-    +closed_at: timestamptz?
-  }
+    EstadoTipo "1" --> "0..*" Vehiculo : estadoActual
+    Vehiculo "1" --> "0..*" Incidencia : incidencias
+    Usuario "1" --> "0..*" Incidencia : creador
+    Usuario "1" --> "0..*" Incidencia : cerrador
 
-  %% Relaciones
-  Usuario "1" -- "0..*" UsuarioRol 
-  Rol "1" -- "0..*" UsuarioRol 
+    %% Eventos de estado (historial)
+    Vehiculo "1" --> "0..*" EventoEstado : historialEstados
+    EstadoTipo "1" --> "0..*" EventoEstado : estadoAnterior
+    EstadoTipo "1" --> "0..*" EventoEstado : estadoNuevo
+    Usuario "1" --> "0..*" EventoEstado : cambioRegistradoPor
 
-  EstadoTipo "1" -- "0..*" Vehiculo 
-  Vehiculo "1" -- "0..*" EventoEstado 
-  EstadoTipo "1" -- "0..*" EventoEstado 
-  EstadoTipo "1" -- "0..*" EventoEstado 
-  Usuario "1" -- "0..*" EventoEstado 
+    %% Usuarios y Roles
+    Usuario "0..*" --> "0..*" Rol : usuarios_roles
 
-  Vehiculo "1" -- "0..*" Incidencia 
-  Usuario "1" -- "0..*" Incidencia 
-  Usuario "0..1" -- "0..*" Incidencia 
+
+    %% ==================================
+    %% MODULO DE INYECCIÓN DE DEPENDENCIAS
+    %% ==================================
+
+    class VehiculoService {
+        +listar()
+        +obtener(id)
+        +crear(data)
+        +actualizar(id, data)
+        +eliminar(id)
+    }
+
+    class VehiculoRepository {
+        +findAll()
+        +findById(id)
+        +findByDominio(dominio)
+        +create(data)
+        +updateById(entity,data)
+        +deleteById(entity)
+        +crearEvento(...)
+    }
+
+    class Notificador {
+        +vehiculoCreado()
+        +vehiculoActualizado()
+        +vehiculoEliminado()
+        +avisarCambioEstado()
+    }
+
+    class Container {
+        +vehiculoService
+        +vehiculoRepository
+        +notificador
+    }
+
+    Container --> VehiculoService : provide
+    Container --> VehiculoRepository : provide
+    Container --> Notificador : provide
+
+    VehiculoService --> VehiculoRepository : usa
+    VehiculoService --> Notificador : notifica
+    VehiculoService --> EventoEstado : registra
 
 ```
