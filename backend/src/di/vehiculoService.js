@@ -1,9 +1,7 @@
 class VehiculoService {
-  constructor({ vehiculoRepository, notificador, dbSequelize, EstadoTipo }) {
+  constructor({ vehiculoRepository, notificador }) {
     this.vehiculoRepository = vehiculoRepository;
     this.notificador = notificador;
-    this.dbSequelize = dbSequelize;
-    this.EstadoTipo = EstadoTipo;
   }
 
   listar() {
@@ -15,7 +13,7 @@ class VehiculoService {
   }
 
   async crear(data) {
-    const { dominio, marca, modelo } = data;
+    const { dominio, marca, modelo } = data || {};
     if (!dominio || !marca || !modelo) {
       const e = new Error('Faltan campos obligatorios');
       e.status = 400;
@@ -51,20 +49,7 @@ class VehiculoService {
       }
     }
 
-    const estadoAntes = actual.estado_actual_id;
-    const estadoNuevo = data.estado_actual_id;
-
     const actualizado = await this.vehiculoRepository.updateById(actual, data);
-
-    if (estadoNuevo && estadoNuevo !== estadoAntes) {
-      await this.vehiculoRepository.crearEvento({
-        vehiculo_id: actual.id,
-        estado_anterior_id: estadoAntes || null,
-        estado_nuevo_id: estadoNuevo,
-        motivo: 'Registro de cambio de estado'
-      });
-    }
-  
     this.notificador.vehiculoActualizado(actualizado);
     return actualizado;
   }
@@ -82,6 +67,7 @@ class VehiculoService {
 }
 
 module.exports = VehiculoService;
+
 
 
   

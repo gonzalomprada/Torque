@@ -1,15 +1,20 @@
 const dbSequelize = require('../db/conexion.js');
 
+// Core seguridad
 const Usuario = require('./usuariosModels.js');
 const Rol = require('./rolesModels.js');
 const UsuarioRol = require('./usuariosRolesModels.js');
-const EstadoTipo = require('./estadosTipoModels.js');
+
+// Dominio nuevo
 const Vehiculo = require('./vehiculosModels.js');
-const Incidencia = require('./incidenciasModels.js');
-const EventoEstado = require('./eventosEstadoModels.js');
+const Turno = require('./turnosModels.js');
+const Inspeccion = require('./inspeccionesModels.js');
+const ChequeoTipo = require('./chequeoTiposModels.js');          // catálogo P1..P8
+const ChequeoResultado = require('./chequeosResultadosModels.js'); // ítems con puntaje 1..10
 
-// Relaciones Usuarios / Roles
-
+// -------------------------------
+// Usuarios <-> Roles (N a N)
+// -------------------------------
 Usuario.belongsToMany(Rol, {
   through: UsuarioRol,
   foreignKey: 'usuario_id',
@@ -23,82 +28,69 @@ Rol.belongsToMany(Usuario, {
   as: 'usuarios'
 });
 
-
-// EstadoTipo - Vehiculo
-
-EstadoTipo.hasMany(Vehiculo, {
-  foreignKey: 'estado_actual_id',
-  as: 'vehiculos'
-});
-Vehiculo.belongsTo(EstadoTipo, {
-  foreignKey: 'estado_actual_id',
-  as: 'estadoActual'
-});
-
-
-// Histórico de estados
-
-Vehiculo.hasMany(EventoEstado, {
+Vehiculo.hasMany(Turno, {
   foreignKey: 'vehiculo_id',
-  as: 'historialEstados',
+  as: 'turnos',
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE'
 });
-EventoEstado.belongsTo(Vehiculo, {
+Turno.belongsTo(Vehiculo, {
   foreignKey: 'vehiculo_id',
   as: 'vehiculo'
 });
 
-EstadoTipo.hasMany(EventoEstado, {
-  foreignKey: 'estado_anterior_id',
-  as: 'eventosComoAnterior'
-});
-EstadoTipo.hasMany(EventoEstado, {
-  foreignKey: 'estado_nuevo_id',
-  as: 'eventosComoNuevo'
-});
-EventoEstado.belongsTo(EstadoTipo, {
-  foreignKey: 'estado_anterior_id',
-  as: 'estadoAnterior'
-});
-EventoEstado.belongsTo(EstadoTipo, {
-  foreignKey: 'estado_nuevo_id',
-  as: 'estadoNuevo'
-});
-
-// Incidencias
-
-Vehiculo.hasMany(Incidencia, {
-  foreignKey: 'vehiculo_id',
-  as: 'incidencias',
+Turno.hasOne(Inspeccion, {
+  foreignKey: 'turno_id',
+  as: 'inspeccion', // único
   onDelete: 'CASCADE',
   onUpdate: 'CASCADE'
 });
-Incidencia.belongsTo(Vehiculo, {
-  foreignKey: 'vehiculo_id',
-  as: 'vehiculo'
+Inspeccion.belongsTo(Turno, {
+  foreignKey: 'turno_id',
+  as: 'turno'
 });
 
-Usuario.hasMany(Incidencia, {
-  foreignKey: 'creada_por',
-  as: 'incidenciasCreadas'
+Usuario.hasMany(Inspeccion, {
+  foreignKey: 'inspector_id',
+  as: 'inspeccionesRealizadas'
 });
-Usuario.hasMany(Incidencia, {
-  foreignKey: 'cerrada_por',
-  as: 'incidenciasCerradas'
+Inspeccion.belongsTo(Usuario, {
+  foreignKey: 'inspector_id',
+  as: 'inspector'
 });
-Incidencia.belongsTo(Usuario, {
-  foreignKey: 'creada_por',
-  as: 'creador'
+
+ChequeoTipo.hasMany(ChequeoResultado, {
+  foreignKey: 'punto_id',
+  as: 'resultados'
 });
-Incidencia.belongsTo(Usuario, {
-  foreignKey: 'cerrada_por',
-  as: 'cerrador'
+ChequeoResultado.belongsTo(ChequeoTipo, {
+  foreignKey: 'punto_id',
+  as: 'punto'
+});
+
+Inspeccion.hasMany(ChequeoResultado, {
+  foreignKey: 'inspeccion_id',
+  as: 'items',
+  onDelete: 'CASCADE',
+  onUpdate: 'CASCADE'
+});
+ChequeoResultado.belongsTo(Inspeccion, {
+  foreignKey: 'inspeccion_id',
+  as: 'inspeccion'
 });
 
 module.exports = {
   dbSequelize,
-  Usuario, Rol, UsuarioRol,
-  EstadoTipo, Vehiculo,
-  Incidencia, EventoEstado
+
+  Usuario,
+  Rol,
+  UsuarioRol,
+
+  Vehiculo,
+  Turno,
+  Inspeccion,
+
+  ChequeoTipo,
+  ChequeoResultado
 };
+

@@ -1,21 +1,14 @@
 class VehiculoRepository {
-  constructor({ Vehiculo, EstadoTipo, EventoEstado }) {
+  constructor({ Vehiculo }) {
     this.Vehiculo = Vehiculo;
-    this.EstadoTipo = EstadoTipo;
-    this.EventoEstado = EventoEstado;
   }
 
   findAll() {
-    return this.Vehiculo.findAll({
-      include: [{ model: this.EstadoTipo, as: 'estadoActual', attributes: ['codigo', 'nombre'] }],
-      order: [['id', 'ASC']]
-    });
+    return this.Vehiculo.findAll({ order: [['id', 'ASC']] });
   }
 
   findById(id) {
-    return this.Vehiculo.findByPk(id, {
-      include: [{ model: this.EstadoTipo, as: 'estadoActual', attributes: ['codigo', 'nombre'] }]
-    });
+    return this.Vehiculo.findByPk(id);
   }
 
   findByDominio(dominio) {
@@ -32,21 +25,6 @@ class VehiculoRepository {
 
   deleteById(entity) {
     return entity.destroy();
-  }
-
-  getEstadoByCodigo(codigo) {
-    return this.EstadoTipo.findOne({ where: { codigo } });
-  }
-
-  updateEstado(vehiculo, estado_actual_id, t) {
-    return vehiculo.update({ estado_actual_id }, { transaction: t });
-  }
-
-  crearEvento({ vehiculo_id, estado_anterior_id, estado_nuevo_id, motivo, usuario_id }, t) {
-    return this.EventoEstado.create(
-      { vehiculo_id, estado_anterior_id, estado_nuevo_id, motivo, usuario_id },
-      { transaction: t }
-    );
   }
 }
 
