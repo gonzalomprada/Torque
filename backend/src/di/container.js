@@ -1,27 +1,34 @@
 const { createContainer, asClass, asValue } = require('awilix');
-const { Vehiculo, EstadoTipo } = require('../models/index.js');
+const dbSequelize = require('../db/conexion.js');
+const { Vehiculo, EstadoTipo, EventoEstado } = require('../models');
+const Notificador = require('./notificador');
+const VehiculoRepository = require('./vehiculoRepository');
+const VehiculoService = require('./vehiculoService');
 
-const VehiculoRepository = require('./vehiculoRepository.js');
-const VehiculoService = require('./vehiculoService.js');
-const Notificador = require('./notificador.js');
+function buildContainer() {
+  const container = createContainer();
 
-const container = createContainer();
+  container.register({
+    // infra
+    dbSequelize: asValue(dbSequelize),
+    // modelos
+    Vehiculo: asValue(Vehiculo),
+    EstadoTipo: asValue(EstadoTipo),
+    EventoEstado: asValue(EventoEstado),
 
-container.register({
-  // Models
-  Vehiculo: asValue(Vehiculo),
-  EstadoTipo: asValue(EstadoTipo),
+    // servicios de infraestructura
+    notificador: asClass(Notificador).singleton(),
 
-  // Infra
-  notificador: asClass(Notificador).singleton(),
+    // repos
+    vehiculoRepository: asClass(VehiculoRepository).scoped(),
 
-  // Repository
-  vehiculoRepository: asClass(VehiculoRepository)
-    .singleton()
-    .inject(() => ({ Vehiculo, EstadoTipo })),
+    // services
+    vehiculoService: asClass(VehiculoService).scoped(),
+  });
 
-  // Service
-  vehiculoService: asClass(VehiculoService).singleton(),
-});
+  return container;
+}
 
-module.exports = container;
+module.exports = buildContainer;
+
+

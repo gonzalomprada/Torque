@@ -1,7 +1,8 @@
 class VehiculoRepository {
-  constructor({ Vehiculo, EstadoTipo }) {
+  constructor({ Vehiculo, EstadoTipo, EventoEstado }) {
     this.Vehiculo = Vehiculo;
     this.EstadoTipo = EstadoTipo;
+    this.EventoEstado = EventoEstado;
   }
 
   findAll() {
@@ -25,14 +26,30 @@ class VehiculoRepository {
     return this.Vehiculo.create(data);
   }
 
-  async updateById(entity, data) {
+  updateById(entity, data) {
     return entity.update(data);
   }
 
-  async deleteById(entity) {
+  deleteById(entity) {
     return entity.destroy();
+  }
+
+  getEstadoByCodigo(codigo) {
+    return this.EstadoTipo.findOne({ where: { codigo } });
+  }
+
+  updateEstado(vehiculo, estado_actual_id, t) {
+    return vehiculo.update({ estado_actual_id }, { transaction: t });
+  }
+
+  crearEvento({ vehiculo_id, estado_anterior_id, estado_nuevo_id, motivo, usuario_id }, t) {
+    return this.EventoEstado.create(
+      { vehiculo_id, estado_anterior_id, estado_nuevo_id, motivo, usuario_id },
+      { transaction: t }
+    );
   }
 }
 
 module.exports = VehiculoRepository;
+
 

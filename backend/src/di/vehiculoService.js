@@ -1,7 +1,9 @@
 class VehiculoService {
-  constructor({ vehiculoRepository, notificador }) {
+  constructor({ vehiculoRepository, notificador, dbSequelize, EstadoTipo }) {
     this.vehiculoRepository = vehiculoRepository;
     this.notificador = notificador;
+    this.dbSequelize = dbSequelize;
+    this.EstadoTipo = EstadoTipo;
   }
 
   listar() {
@@ -49,7 +51,20 @@ class VehiculoService {
       }
     }
 
+    const estadoAntes = actual.estado_actual_id;
+    const estadoNuevo = data.estado_actual_id;
+
     const actualizado = await this.vehiculoRepository.updateById(actual, data);
+
+    if (estadoNuevo && estadoNuevo !== estadoAntes) {
+      await this.vehiculoRepository.crearEvento({
+        vehiculo_id: actual.id,
+        estado_anterior_id: estadoAntes || null,
+        estado_nuevo_id: estadoNuevo,
+        motivo: 'Registro de cambio de estado'
+      });
+    }
+  
     this.notificador.vehiculoActualizado(actualizado);
     return actualizado;
   }
@@ -61,12 +76,12 @@ class VehiculoService {
       e.status = 404;
       throw e;
     }
-
     await this.vehiculoRepository.deleteById(actual);
     this.notificador.vehiculoEliminado(id);
   }
 }
 
 module.exports = VehiculoService;
+
 
   
