@@ -140,6 +140,7 @@ BEGIN
       ON CONFLICT (turno_id) DO NOTHING;
 
       -- 8 puntos (1..8). Ajustá los nombres si querés.
+      -- 8 puntos (1..8)
       INSERT INTO inspeccion_items (inspeccion_id, punto, nombre, puntaje)
       SELECT i.id, x.p, x.n, x.sc
       FROM inspecciones i,
@@ -150,10 +151,11 @@ BEGIN
         (4,'Neumáticos',9),
         (5,'Luces',10),
         (6,'Chasis',10),
-        (7,'Cinturones',12), -- este vendría 10, lo limitamos a 10 con CHECK; dejamos 9
-        (8,'Emisiones',14)   -- idem
+        (7,'Cinturones',9),
+        (8,'Emisiones',10)
       ) AS x(p,n,sc)
       WHERE i.turno_id = t_id;
+
 
       -- Corrige puntajes fuera de rango si el CHECK bloqueó (por si la DB ya existía sin CHECK)
       UPDATE inspeccion_items SET puntaje = LEAST(GREATEST(puntaje,1),10)

@@ -11,7 +11,7 @@ class VehiculoRepository {
     return this.Vehiculo.findByPk(id);
   }
 
-  findByDominio(dominio) {
+  findByDominio(matricula) {
     return this.Vehiculo.findOne({ where: { dominio } });
   }
 
