@@ -11,12 +11,12 @@ router.post('/:id/confirmar', requireAuth, requireVehiculoOwner ,turnosControlle
 
 // CRUD básico
 router.route('/')
-  .get(turnosController.consultar);
+  .get(requireAuth, turnosController.consultar);
 
 router.route('/:id')
   .get(requireAuth, requireVehiculoOwner, turnosController.consultarId)
-  .put(turnosController.actualizarId)
-  .delete(turnosController.eliminarId);
+  .put(requireAuth, turnosController.actualizarId)
+  .delete(requireAuth, turnosController.eliminarId);
 
 module.exports = router;
 
