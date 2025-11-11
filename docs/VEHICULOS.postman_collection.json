@@ -1,0 +1,200 @@
+{
+	"info": {
+		"_postman_id": "2e60bd46-4678-4d5e-b568-65c5d059a780",
+		"name": "VEHICULOS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48983967",
+		"_collection_link": "https://gonzalomprada-1604844.postman.co/workspace/TORQUE~f9547e37-94cb-4743-8efd-5f8f3c6796c0/collection/48983967-2e60bd46-4678-4d5e-b568-65c5d059a780?action=share&source=collection_link&creator=48983967"
+	},
+	"item": [
+		{
+			"name": "ALL",
+			"item": [
+				{
+					"name": "GET",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJkdWVuaW9AZGVtby5jb20iLCJyb2wiOiJkdWVuaW8iLCJpYXQiOjE3NjI4ODU2MTAsImV4cCI6MTc2MjkxNDQxMH0.JVDFo7qWtMATYQD6S43V6qpFkuE4WvvogrV5-MZI-8o",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/vehiculos/",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"vehiculos",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "POST",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJkdWVuaW9AZXhhbXBsZS5jb20iLCJyb2wiOiJkdWVuaW8iLCJpYXQiOjE3NjI4ODY1MDEsImV4cCI6MTc2MjkxNTMwMX0.R6Y0Ga2fyjT3nksY4mLRABALPuRpeGAy_N9tJcequHU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"matricula\": \"AA123BB\",\r\n  \"marca\": \"Toyota\",\r\n  \"modelo\": \"Corolla\",\r\n  \"anio\": 2019,\r\n  \"duenioId\": 1\r\n}\r\n\r\n\r\n\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/vehiculos",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"vehiculos"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "ID",
+			"item": [
+				{
+					"name": "GET ID",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJkdWVuaW9AZXhhbXBsZS5jb20iLCJyb2wiOiJkdWVuaW8iLCJpYXQiOjE3NjI4ODc0MDMsImV4cCI6MTc2MjkxNjIwM30.MTh2faJdWaivJXP0dI0oPGt6plFFkul01YAP3gBhlvU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/vehiculos/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"vehiculos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "PUT ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJkdWVuaW9AZXhhbXBsZS5jb20iLCJyb2wiOiJkdWVuaW8iLCJpYXQiOjE3NjI4ODc0MDMsImV4cCI6MTc2MjkxNjIwM30.MTh2faJdWaivJXP0dI0oPGt6plFFkul01YAP3gBhlvU",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n\r\n    \"anio\": 2020\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/v1/vehiculos/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"vehiculos",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "DELETE ID",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/api/v1/vehiculos/4",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"v1",
+								"vehiculos",
+								"4"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

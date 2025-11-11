@@ -1,0 +1,120 @@
+{
+	"info": {
+		"_postman_id": "a73e6bbf-5af3-494e-9981-1ff8d436a1a8",
+		"name": "RESULTADOS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48983967",
+		"_collection_link": "https://gonzalomprada-1604844.postman.co/workspace/TORQUE~f9547e37-94cb-4743-8efd-5f8f3c6796c0/collection/48983967-a73e6bbf-5af3-494e-9981-1ff8d436a1a8?action=share&source=collection_link&creator=48983967"
+	},
+	"item": [
+		{
+			"name": "RESULTADO POR TURNO",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwiZW1haWwiOiJkdWVuaW9AZXhhbXBsZS5jb20iLCJyb2wiOiJkdWVuaW8iLCJpYXQiOjE3NjI4ODc0MDMsImV4cCI6MTc2MjkxNjIwM30.MTh2faJdWaivJXP0dI0oPGt6plFFkul01YAP3gBhlvU",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/resultados/turno/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"resultados",
+						"turno",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "OBSERVACION",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJpbnNwZWN0b3JAZGVtby5jb20iLCJyb2wiOiJpbnNwZWN0b3IiLCJpYXQiOjE3NjI4NjM2MzUsImV4cCI6MTc2Mjg5MjQzNX0.ra_l5LT6g7zWPhDQtmXhjrZA_n3JWc6zqYiEEr2M3t8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"observacion\": \"Frenos con desgaste irregular, revisar pastillas.\" }\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/resultados/turno/4/observacion",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"resultados",
+						"turno",
+						"4",
+						"observacion"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "RECALCULAR",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJpbnNwZWN0b3JAZGVtby5jb20iLCJyb2wiOiJpbnNwZWN0b3IiLCJpYXQiOjE3NjI4ODc1MjgsImV4cCI6MTc2MjkxNjMyOH0.yrNfskyFf1bkZV9QFoPMYIyNsZJpvicNWM7e2rNvlK4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/resultados/recalcular/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"resultados",
+						"recalcular",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
