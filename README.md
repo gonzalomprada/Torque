@@ -7,128 +7,98 @@ Legajo: 0136007
 
 ```mermaid
 
-erDiagram
-  USUARIOS {
-    INT id PK
-    VARCHAR nombre
-    VARCHAR email "UNIQUE"
-    TEXT hash_password
-    BOOLEAN activo
-  }
+classDiagram
+direction LR
 
-  ROLES {
-    SMALLINT id PK
-    VARCHAR nombre "UNIQUE (ADMIN|INSPECTOR)"
-  }
+class Usuario {
+  +id: number
+  +nombre: string
+  +email: string
+  +passwordHash: string
+  +rol: string  // "duenio" | "inspector" | "admin"
+}
 
-  USUARIOS_ROLES {
-    INT usuario_id FK "-> USUARIOS.id"
-    SMALLINT rol_id FK "-> ROLES.id"
-  }
+class Vehiculo {
+  +id: number
+  +matricula: string
+  +marca: string
+  +modelo: string
+  +anio: number
+  +duenioId: number
+}
 
-  VEHICULOS {
-    INT id PK
-    VARCHAR matricula "UNIQUE"
-    VARCHAR marca
-    VARCHAR modelo
-    SMALLINT anio
-  }
+class Turno {
+  +id: number
+  +vehiculoId: number
+  +fecha: Date
+  +estado: string // "pendiente" | "confirmado" | "completado"
+}
 
-  TURNOS {
-    INT id PK
-    INT vehiculo_id FK "-> VEHICULOS.id"
-    TIMESTAMP fecha_hora
-    VARCHAR estado "'PENDIENTE'|'CONFIRMADO'|'CANCELADO'|'ATENDIDO'"
-    TIMESTAMP creado_en
-  }
+class Chequeo {
+  +id: number
+  +turnoId: number
+  +punto: number  // 1..8
+  +puntaje: number // 1..10
+}
 
-  INSPECCIONES {
-    INT id PK
-    INT turno_id FK "-> TURNOS.id (UNIQUE)"
-    INT inspector_id FK "-> USUARIOS.id"
-    SMALLINT puntaje_total
-    VARCHAR resultado "'SEGURO'|'RECHEQUEO'"
-    TIMESTAMP cerrada_en
-  }
+class Resultado {
+  +id: number
+  +turnoId: number
+  +total: number
+  +estado: string // "seguro" | "rechequear"
+  +observacion: string
+}
 
-  PUNTOS {
-    SMALLINT id PK
-    VARCHAR codigo "P1..P8"
-    VARCHAR nombre
-    SMALLINT orden
-  }
+Usuario "1" --o "many" Vehiculo : duenio
+Vehiculo "1" --o "many" Turno : turnos
+Turno "1" --o "8" Chequeo : items
+Turno "1" --o "1" Resultado : resumen
 
-  INSPECCION_ITEMS {
-    INT id PK
-    INT inspeccion_id FK "-> INSPECCIONES.id"
-    SMALLINT punto_id FK "-> PUNTOS.id"
-    SMALLINT puntaje "1..10"
-    TEXT observacion
-  }
-
-  USUARIOS ||--o{ USUARIOS_ROLES : asigna
-  ROLES ||--o{ USUARIOS_ROLES : tiene
-
-  VEHICULOS ||--o{ TURNOS : solicita
-  TURNOS ||--o| INSPECCIONES : genera
-  USUARIOS ||--o{ INSPECCIONES : realiza
-
-  PUNTOS ||--o{ INSPECCION_ITEMS : define
-  INSPECCIONES ||--o{ INSPECCION_ITEMS : contiene
 
 
 ```
 
-## FLUJO 
 
-1–4. Turnos: el dueño ingresa matrícula, ve disponibilidad y confirma (TURNOS con estados).
-5–6. Inspección: un INSPECTOR carga 8 ítems (INSPECCION_ITEMS) con puntaje 1–10 sobre PUNTOS fijos.
-7–8. Reglas: al cerrar la inspección se calcula el puntaje_total y resultado:
+```
+Torque/
+├─ app.js
+├─ server.js
+├─ .env
+├─ package.json
+├─ docker-compose.yml
+├─ init.sql
+└─ src/
+   ├─ db/
+   │  └─ conexion.js
+   ├─ di/
+   │  ├─ container.js
+   │  └─ registrations.js
+   ├─ middleware/
+   │  ├─ authMiddleware.js
+   │  └─ roleMiddleware.js
+   ├─ models/
+   │  ├─ usuarioModel.js
+   │  ├─ vehiculoModel.js
+   │  ├─ turnoModel.js
+   │  ├─ chequeoModel.js
+   │  └─ resultadoModel.js
+   ├─ repositories/
+   │  └─ vehiculoRepository.js
+   ├─ services/
+   │  └─ vehiculoService.js
+   ├─ controllers/
+   │  ├─ authController.js
+   │  ├─ usuariosController.js
+   │  ├─ vehiculosController.js
+   │  ├─ turnosController.js
+   │  ├─ chequeosController.js
+   │  └─ resultadosController.js
+   └─ routes/
+      ├─ authRoutes.js
+      ├─ usuariosRoutes.js
+      ├─ vehiculosRoutes.js
+      ├─ turnosRoutes.js
+      ├─ chequeosRoutes.js
+      └─ resultadosRoutes.js
 
->= 80 → SEGURO
-
-< 40 o algún ítem < 5 → RECHEQUEO
-
-(40–79 sin ítems <5) → podés dejar como RECHEQUEO también para simplificar y cumplir consigna
-
-## Endpoints
-
-### Login
-
-| Verbo | Endpoint      | Descripción | Auth |
-| ----- | ------------- | ----------- | ---- |
-| POST  | `/auth/login` | Login y JWT | —    |
-
-### Vehiculo
-
-| Verbo | Endpoint                | Descripción                      | Auth            |
-| ----- | ----------------------- | -------------------------------- | --------------- |
-| GET   | `/vehiculos?matricula=` | Obtener por matrícula (opcional) | ADMIN/INSPECTOR |
-| POST  | `/vehiculos`            | Alta (si no existe)              | ADMIN           |
-| GET   | `/vehiculos/:id`        | Detalle                          | ADMIN/INSPECTOR |
-| PUT   | `/vehiculos/:id`        | Actualizar                       | ADMIN           |
-
-### Puntos
-
-| Verbo | Endpoint  | Descripción              | Auth |
-| ----- | --------- | ------------------------ | ---- |
-| GET   | `/puntos` | Lista de 8 puntos (seed) | —    |
-
-### Turnos
-
-| Verbo | Endpoint                            | Descripción                                              | Auth |
-| ----- | ----------------------------------- | -------------------------------------------------------- | ---- |
-| GET   | `/turnos/disponibilidad`            | Slots disponibles (ej: próximos días/horarios estándar)  | —    |
-| POST  | `/turnos/solicitar`                 | Crea turno **PENDIENTE** `{matricula, fecha_hora}`       | —    |
-| POST  | `/turnos/:id/confirmar`             | Pasa **PENDIENTE → CONFIRMADO** (confirmación del dueño) | —    |
-| GET   | `/turnos/:id`                       | Ver estado del turno                                     | —    |
-| POST  | `/turnos/:id/cancelar` *(opcional)* | Cancela si todavía no fue atendido                       | —    |
-
-### Inspecciones 
-
-| Verbo | Endpoint                           | Descripción                                                                                 | Auth      |
-| ----- | ---------------------------------- | ------------------------------------------------------------------------------------------- | --------- |
-| POST  | `/inspecciones`                    | Crear inspección para **turno CONFIRMADO** `{turno_id}` (marca turno “ATENDIDO” al cerrar)  | INSPECTOR |
-| GET   | `/inspecciones/:id`                | Ver inspección                                                                              | INSPECTOR |
-| PUT   | `/inspecciones/:id/items/:puntoId` | Cargar/actualizar puntaje `1..10` y `observacion` de un ítem                                | INSPECTOR |
-| POST  | `/inspecciones/:id/cerrar`         | Calcula total y **resultado** según regla; setea `puntaje_total`, `resultado`, `cerrada_en` | INSPECTOR |
+```
