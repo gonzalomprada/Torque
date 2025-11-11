@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:16
+    container_name: torque_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: torque_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - torque_data:/var/lib/postgresql/data
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: torque_backend
+    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      PORT: 3000
+      PG_HOST: db
+      PG_PORT: 5432
+      PG_USER: postgres
+      PG_PASSWORD: postgres
+      PG_DATABASE: torque_db
+      API_PREFIX: /api/v1
+      JWT_SECRET: torque-secret
+      JWT_EXP: 4h
+    ports:
+      - "3000:3000"
+    command: ["npm", "start"]
+
+volumes:
+  torque_data:

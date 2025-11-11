@@ -1,0 +1,118 @@
+{
+	"info": {
+		"_postman_id": "d5c80bf0-1842-44c7-8ac4-bb5a3dc16268",
+		"name": "CHEQUEOS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48983967",
+		"_collection_link": "https://gonzalomprada-1604844.postman.co/workspace/TORQUE~f9547e37-94cb-4743-8efd-5f8f3c6796c0/collection/48983967-d5c80bf0-1842-44c7-8ac4-bb5a3dc16268?action=share&source=collection_link&creator=48983967"
+	},
+	"item": [
+		{
+			"name": "CARGAR",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiZW1haWwiOiJpbnNwZWN0b3JAZGVtby5jb20iLCJyb2wiOiJpbnNwZWN0b3IiLCJpYXQiOjE3NjI4ODc1MjgsImV4cCI6MTc2MjkxNjMyOH0.yrNfskyFf1bkZV9QFoPMYIyNsZJpvicNWM7e2rNvlK4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"turno_id\": 1,\r\n  \"items\": [\r\n    { \"punto\": 8, \"puntaje\": 10 }\r\n  ]\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/chequeos",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"chequeos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "LISTAR POR ID",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJpbnNwZWN0b3JAZGVtby5jb20iLCJyb2wiOiJpbnNwZWN0b3IiLCJpYXQiOjE3NjI4NjM2MzUsImV4cCI6MTc2Mjg5MjQzNX0.ra_l5LT6g7zWPhDQtmXhjrZA_n3JWc6zqYiEEr2M3t8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/chequeos/4\n",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"chequeos",
+						"4\n"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "ELIMINAR PUNTO",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6NSwiZW1haWwiOiJpbnNwZWN0b3JAZGVtby5jb20iLCJyb2wiOiJpbnNwZWN0b3IiLCJpYXQiOjE3NjI4NjM2MzUsImV4cCI6MTc2Mjg5MjQzNX0.ra_l5LT6g7zWPhDQtmXhjrZA_n3JWc6zqYiEEr2M3t8",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/v1/chequeos/turno/4/punto/1\n",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"chequeos",
+						"turno",
+						"4",
+						"punto",
+						"1\n"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

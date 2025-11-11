@@ -1,0 +1,80 @@
+{
+	"info": {
+		"_postman_id": "6b575bf4-b660-4085-a470-c2dbcfe81762",
+		"name": "USUARIOS",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48983967",
+		"_collection_link": "https://gonzalomprada-1604844.postman.co/workspace/TORQUE~f9547e37-94cb-4743-8efd-5f8f3c6796c0/collection/48983967-6b575bf4-b660-4085-a470-c2dbcfe81762?action=share&source=collection_link&creator=48983967"
+	},
+	"item": [
+		{
+			"name": "LOGIN",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"email\": \"inspector@demo.com\",\r\n  \"password\": \"demo123\"\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/usuarios/login",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"usuarios",
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "REGISTER",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"nombre\": \"Inspector Demo\",\r\n  \"email\": \"inspector@demo.com\",\r\n  \"password\": \"demo123\",\r\n  \"rol\": \"inspector\"\r\n}\r\n\r\n\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/api/v1/usuarios/registrar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"v1",
+						"usuarios",
+						"registrar"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
