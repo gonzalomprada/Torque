@@ -2,7 +2,10 @@
 
 En este documento, dejo a modo de comodidad del profesor un flujo completo de prueba para validar las funcionalidades del proyecto. La API utiliza autenticación por JWT, por lo que en algunos casos es necesario utilizar dentro de postman la funcionalidad de Autorization: Bearer (token).
 
+En los ejemplos se usa la URL base: http://localhost:3000/api/v1
+
 1. Registro de usuario 
+POST /usuarios/registrar
 ```
 {
   "nombre": "Dueño Demo",
@@ -13,7 +16,7 @@ En este documento, dejo a modo de comodidad del profesor un flujo completo de pr
 ```
 
 2. Login de usuario 
-
+POST /usuarios/login
 ```
 {
   "email": "duenio@example.com",
@@ -22,6 +25,7 @@ En este documento, dejo a modo de comodidad del profesor un flujo completo de pr
 ```
 
 3. Registrar un vehículo 
+POST /vehiculos
 Authorization: Bearer TOKEN_DUENIO
 ```
 {
@@ -49,6 +53,7 @@ Debería contestar algo como:
 ```
 
 5. Solicitar un turno
+POST /turnos/solicitar
 Authorization: Bearer TOKEN_DUENIO
 ```
 {
@@ -58,7 +63,7 @@ Authorization: Bearer TOKEN_DUENIO
 ```
 
 6. Registrar usuario inspector 
-
+POST /usuarios/registrar
 ```
 {
   "nombre": "Inspector Demo",
@@ -69,7 +74,7 @@ Authorization: Bearer TOKEN_DUENIO
 ```
 
 7. Login
-
+POST /usuarios/login
 ```
 {
   "email": "inspector@example.com",
@@ -84,7 +89,7 @@ Authorization: Bearer TOKEN_INSPECTOR
 
 9. Ingresar puntos (Hasta 8)
 Authorization: Bearer TOKEN_INSPECTOR
-
+POST /chequeos
 ```
 { "turno_id": 1, "punto": 1, "puntaje": 10 }
 ```
