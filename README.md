@@ -139,7 +139,7 @@ Turno "1" --o "1" Resultado : resumen
 
 | Método | Endpoint                                            | Descripción                                           | Auth        |
 |--------|------------------------------------------------------|-------------------------------------------------------|-------------|
-| GET    | /api/turnos/disponibilidad?matricula=AAA111         | Obtener disponibilidad por matrícula                  | ✅ dueño    |
+| GET    | /api/turnos/disponibilidad?fecha=2025-11-15        | Obtener disponibilidad por matrícula                  | ✅ dueño    |
 | POST   | /api/turnos/solicitar                               | Solicitar turno ingresando matrícula y fecha          | ✅ dueño    |
 | POST   | /api/turnos/confirmar                               | Confirmar turno solicitado                            | ✅ dueño    |
 | GET    | /api/turnos/:turno_id                               | Obtener datos del turno                               | ✅ dueño    |
