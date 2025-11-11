@@ -170,3 +170,7 @@ docker compose up -d --build
 ```
 
 La api queda en http://localhost:3000
+
+## Testing 
+
+Este TP realiza tests mediante POSTMAN, dentro de la carpeta docs, se adjuntan las coleccciones para importar y testear, con los endpoints ya cargados. 
